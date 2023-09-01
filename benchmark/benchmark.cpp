@@ -8,10 +8,8 @@
 #include "Union.hpp"
 #include "CLike.hpp"
 
-long start = 1000000;
-long end = 1000000;
-//long multiplier = 1000000;
-
+inline constexpr long start = 1000000;
+inline constexpr long end = 1000000;
 
 
 std::vector<float> GenData(size_t size)
@@ -22,13 +20,6 @@ std::vector<float> GenData(size_t size)
     std::vector<float> in(size);
     std::generate(std::begin(in),std::end(in), [&]()->float{return dist(rng);});
     return in;
-}
-
-float GenFloat()
-{
-    std::mt19937 rng(1234);
-    std::uniform_real_distribution<float> dist;
-    return dist(rng);
 }
 
 std::vector<Virtual::Base*> GenVirtual(size_t size)
@@ -61,7 +52,6 @@ std::vector<Variant::StatVariant> GenVariant(size_t size)
         out.push_back(Variant::Sum());
     }
     return out;
-
 }
 
 std::vector<Union::StatUnion> GenUnion(size_t size)
@@ -109,23 +99,17 @@ static void BM_Virtual(benchmark::State& state) {
         out += ops[i]->operator()(data[i]);
         
     }
-
     benchmark::DoNotOptimize(out);
-
   }
-    
 }
-// Register the function as a benchmark
-BENCHMARK(BM_Virtual)->Range(start,end);
 
-// Define another benchmark
+
 static void BM_Variant(benchmark::State& state) {
   size_t opsNr = static_cast<size_t>(state.range(0));
   auto ops = GenVariant(opsNr);
   std::vector<float> data = GenData(opsNr*3);
   for (auto _ : state)
   {
-
     float out = 0;
     for(size_t i=0; i<opsNr*3;++i)
     {        
@@ -133,13 +117,11 @@ static void BM_Variant(benchmark::State& state) {
         {
             return arg(rand);
         },ops[i]);
-        
     }
     benchmark::DoNotOptimize(out);
-
   }
 }
-BENCHMARK(BM_Variant)->Range(start,end);
+
 
 static void BM_Union(benchmark::State& state) {
   size_t opsNr = static_cast<size_t>(state.range(0));
@@ -166,7 +148,6 @@ static void BM_Union(benchmark::State& state) {
 
   }
 }
-BENCHMARK(BM_Union)->Range(start,end);
 
 
 static void BM_CLike(benchmark::State& state) {
@@ -192,9 +173,13 @@ static void BM_CLike(benchmark::State& state) {
         out += ops[i].data;
     }
     benchmark::DoNotOptimize(out);
-
   }
 }
+
+
+BENCHMARK(BM_Virtual)->Range(start,end);
+BENCHMARK(BM_Variant)->Range(start,end);
+BENCHMARK(BM_Union)->Range(start,end);
 BENCHMARK(BM_CLike)->Range(start,end);
 
 BENCHMARK_MAIN();
