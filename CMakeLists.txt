@@ -11,7 +11,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/Union)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/Variant)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/Virtual)
 
-# add_subdirectory(src)
 add_subdirectory(benchmark)
 
 
